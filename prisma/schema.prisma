@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Manager {
+  id         Int       @id @default(autoincrement())
+  name       String
+  login      String    @unique
+  password   String
+  telegramId String?
+  role       String    @default("manager")
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  clients    Client[]
+  tasks      Task[]
+}
+
+model Client {
+  id        Int       @id @default(autoincrement())
+  name      String
+  phone     String
+  telegram  String?
+  telegramChatId String?
+  botStarted Boolean  @default(false)
+  city      String?
+  direction String?
+  source    String?
+  status    String    @default("new")
+  value     Int       @default(0)
+  paid      Int       @default(0)
+  note      String?
+  managerId Int?
+  manager   Manager?  @relation(fields: [managerId], references: [id])
+  stageId   Int?
+  stage     Stage?    @relation(fields: [stageId], references: [id])
+  tasks     Task[]
+  payments  Payment[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Stage {
+  id      Int      @id @default(autoincrement())
+  title   String
+  color   String   @default("#4f80e8")
+  order   Int      @default(0)
+  clients Client[]
+}
+
+model Task {
+  id        Int       @id @default(autoincrement())
+  title     String
+  dueAt     DateTime?
+  done      Boolean   @default(false)
+  clientId  Int
+  client    Client    @relation(fields: [clientId], references: [id])
+  managerId Int?
+  manager   Manager?  @relation(fields: [managerId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  amount    Int
+  method    String?
+  clientId  Int
+  client    Client   @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  author    String
+  clientId  Int
+  client    Client   @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+}
