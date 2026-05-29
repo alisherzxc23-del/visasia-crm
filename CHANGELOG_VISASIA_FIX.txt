@@ -1,0 +1,18 @@
+Изменения:
+1. Добавлена единая связка данных CRM: клиенты, оплаты, задачи, менеджеры и этапы используются как общий источник для разделов CRM, Дэшборд, Аналитика, Финансы и Менеджеры.
+2. Добавлен API /api/plans для месячных планов менеджеров и общего плана компании.
+3. Добавлена таблица ManagerPlan в авто-миграцию lib/schema.js.
+4. В разделе «Менеджеры» добавлены: общий план, план на каждого менеджера, процент выполнения и сохранение в базу.
+5. В Дэшборде и Аналитике план месяца теперь считается из сохраненного общего плана или суммы планов менеджеров.
+6. Дизайн не перестраивался: использованы существующие карточки, таблицы, кнопки, прогресс-бары и модальные окна.
+
+Проверка:
+- JS внутри public/crm.html прошел node --check.
+- Новые API JS-файлы прошли node --check.
+- Next build не был выполнен в контейнере, потому что node_modules из исходного архива неполный/битый: отсутствует next/dist/server/require-hook. В архиве ниже node_modules и .next специально исключены. После распаковки выполните npm install, затем npm run build.
+
+v70 Phase 1 operational control:
+- Added SLA timers for active leads.
+- Added automatic risk coloring for leads and deal cards.
+- Added overdue leads control block.
+- Added managers workload block based on active leads, tasks, overdue leads and SLA breaches.
